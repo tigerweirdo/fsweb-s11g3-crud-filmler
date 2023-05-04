@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-
 import axios from "axios";
 
 const EditMovieForm = (props) => {
+  const { id } = useParams();
   const { push } = useHistory();
 
-  const { setMovies } = props;
   const [movie, setMovie] = useState({
     title: "",
     director: "",
@@ -15,6 +14,16 @@ const EditMovieForm = (props) => {
     metascore: 0,
     description: "",
   });
+
+  useEffect(() => {
+    axios.get(`http://localhost:9000/api/movies/${id}`)
+      .then(res => {
+        setMovie(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [id]);
 
   const handleChange = (e) => {
     setMovie({
@@ -28,13 +37,16 @@ const EditMovieForm = (props) => {
     axios
       .put(`http://localhost:9000/api/movies/${id}`, movie)
       .then((res) => {
-        setMovies(res.data);
+        setMovie((prevMovies) =>
+          prevMovies.map((m) => (m.id === parseInt(id) ? res.data : m))
+        );
         push(`/movies/${movie.id}`);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
 
   const { title, director, genre, metascore, description } = movie;
 
@@ -93,19 +105,19 @@ const EditMovieForm = (props) => {
         </div>
 
         <div className="px-5 py-4 border-t border-zinc-200 flex justify-end gap-2">
-          <Link to={`/movies/1`} className="myButton bg-zinc-500">
+          <Link to={`/movies/${id}`} className="myButton bg-zinc-500">
             Vazgeç
           </Link>
           <button
             type="submit"
             className="myButton bg-green-700 hover:bg-green-600"
           >
-            Ekle
+            Kaydet
           </button>
         </div>
-      </form>
-    </div>
-  );
+        </form>
+</div>
+);
 };
 
 export default EditMovieForm;

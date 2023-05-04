@@ -1,34 +1,25 @@
-import React from "react";
 
-import MovieListItem from "./MovieListItem";
-import MovieFooter from "./MovieFooter";
-import FavoriteMovieList from "./FavoriteMovieList";
+
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const MovieList = (props) => {
-  const { movies, favoriteMovies } = props;
+  const { movies } = props;
 
   return (
-    <div className="flex-1">
-      <div className="overflow-hidden bg-white rounded-md shadow mb-4 sm:min-h-[400px]">
-        <table className="table-auto border-collapse text-left w-full">
-          <thead>
-            <tr className="border-zinc-200 border-b">
-              <th className="pl-4">İsim</th>
-              <th>Yönetmen</th>
-              <th>Tür</th>
-              <th>Metascore</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody className="text-sm">
-            {movies.map((movie) => (
-              <MovieListItem key={movie.id} movie={movie} />
-            ))}
-          </tbody>
-        </table>
+    <div className="bg-gray-100 shadow rounded-md p-5">
+      <h5 className="font-bold text-gray-800">Filmler</h5>
+      <div className="pt-3 text-sm">
+        {movies.map((movie) => (
+          <Link
+            key={movie.id}
+            className="py-1 flex gap-2 justify-between text-gray-800 hover:text-blue-600"
+            to={`/movies/${movie.id}`}
+          >
+            {movie.title}
+          </Link>
+        ))}
       </div>
-      <MovieFooter totalMovies={movies.length} />
     </div>
   );
 };
